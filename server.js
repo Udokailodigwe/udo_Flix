@@ -4,7 +4,7 @@ const http = require('http'),
     url = require('url');
 
 //Setup server by combining modules with http function.
-http.createServer(function (request, response) {//Passed two objects in http function.
+http.createServer(function (request, response) {//Parsed two objects in http function.
 
     //Get and read url requests.
     let addr = request.url,//Get requested url using object called from http function.
