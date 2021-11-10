@@ -3,7 +3,7 @@ const express = require ('express');
 const morgan = require ('morgan');
 app = express(); //Encapsulated the express function with variable, app.
 
-//Created JSON object to carry server data.
+//Created JSON object to carry movie data.
 let myMovies = [
   {
     title: 'Lupin',
