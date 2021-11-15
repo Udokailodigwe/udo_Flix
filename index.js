@@ -1,6 +1,9 @@
 //Require necessary modules for server creation.
 const express = require ('express');
 const morgan = require ('morgan');
+bodyParser = require ('body-parser');
+uuid = require ('uuid');
+
 app = express(); //Encapsulated the express function with variable, app.
 
 //Created JSON object to carry movie data.
@@ -70,8 +73,9 @@ let myMovies = [
 //Created middleware functions to ...
 app.use (morgan('common')); //log all request on terminal
 app.use(express.static('public')); // serve all static file in public folder
+app.use(bodyParser.json()); //get required json data from http request body inside req handlers using req.body
 
-//Get index request/route
+//Get index page request/route
 app.get('/', (req, res) =>{
   res.send('Welcome to the hub of movies !'); //respond to index route
 });
@@ -84,6 +88,48 @@ app.get('/documentation', (req, res) => {
 //Get movies request/route
 app.get('/movies', (req, res) =>{
 res.json(myMovies); //return json object containing movies
+});
+
+//Get single movie by title
+app.get('/movies/:title', (req, res)=> {
+  res.json(myMovies.find((movie) => {
+    return movie.title === req.params.title
+  }));
+});
+
+//Get movies by genre
+app.get('/movies/genre/:title', (req, res)=> {
+  res.send('GET request returning data about a movie genre.');
+});
+
+//Get movie director name
+app.get('/movies/director/:name', (req, res) =>{
+res.send('GET request returning data about a movie director.');
+});
+
+//Allow client to create account
+app.post('/clients', (req, res)=> {
+  res.send('POST request allowing client to create account');
+});
+
+//Allow clients to update info
+app.put('/clients/:clientsId/clientsInfo', (req, res)=> {
+  res.send('PUT request allowing clients to update information');
+});
+
+//Allow clients to add favourite movie
+app.post('/clients/:clientsId/addFavourite', (req, res) => {
+  res.send('POST request allowoing clients to add favourite movie')
+});
+
+//Allow clients to remove favourite movie
+app.delete('/clients/:clientsId/removeFavourite', (req, res) => {
+  res.send('PUT request allowoing clients to remove favourite movie')
+});
+
+//Allow clients to terminate favourite movie
+app.delete('/clients', (req, res) => {
+  res.send('PUT request allowoing clients to terminate account')
 });
 
 //Created error handler
