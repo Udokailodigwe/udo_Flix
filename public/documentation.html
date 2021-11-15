@@ -5,14 +5,94 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
     <title>myFlix API</title>
 </head>
 
 <body>
-    <p>This API software enables users to request data from the server, and thus provides data in response. Such data
-        includes but not limited to movie list etc.
-    </p>
-    <script src="index.js"></script>
+<table>
+    <thead>
+        <tr>
+            <th>HTTP Method</th>
+            <th>Request</th>
+            <th>URL</th>
+            <th>Request body data format</th>
+            <th>Response body data format</th>
+        </tr>
+    </thead>
+        <tbody>
+            <tr>
+                <td>GET</td>
+                <td>Get all movie lists</td>
+                <td>'/movies'</td>
+                <td>None</td>
+                <td>Get data array of all movie lists in JSON format</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>Get data about a single movie title</td>
+                <td>'/movies/:title'</td>
+                <td>None</td>
+                <td>Get an array of a single movie data in JSON format, based on title entered in the URL parameter. Example: {
+            title: 'Lupin',
+            director: ['Louis Leterrier',  'Marcela Said'],
+            genre: ['Crime', 'Thriller', 'Mystery', 'Drama'],
+            releaseYear: 2021
+            }
+                </td>    
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>Get movie by genre</td>
+                <td>'/movies/genre/:title'</td>
+                <td>None</td>
+                <td>Get an array of movie by genre in JSON format</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>Get data about a movie director</td>
+                <td>'/movies/director/:name'</td>
+                <td>None</td>
+                <td>Get an array of a movie director data in JSON format, based on the director entered in the URL parameter </td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>Allow clients to create account</td>
+                <td>'/clients'</td>
+                <td>Clients' user information added to the server in a form  style</td>
+                <td>A text message of the client's added information, included with a unique id and an extra successproof message  </td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td>Allow clients to update their client info</td>
+                <td>'/clients/:clientsId/clientsInfo'</td>
+                <td>None</td>
+                <td>A text is returned alongside the updated data</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>Allow clients to add their favourite movies to their library</td>
+                <td>'/clients/:clientsId/addFavourite'</td>
+                <td>An array of JSON data containing the added movie. Example: { title: 'Lupin', director: ['Louis Leterrier', 'Marcela Said'], genre: ['Crime', 'Thriller', 'Mystery', 'Drama'], releaseYear: 2021 } </td>
+                <td>An array of the added movie data in JSON format, with a text  confirming added data and an added ID. Example: { <b>id: 79,</b>  title: 'Lupin', director: ['Louis Leterrier', 'Marcela Said'], genre: ['Crime', 'Thriller', 'Mystery', 'Drama'], releaseYear: 2021 } </td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>Allow clients to remove a movie from their list of favorites</td>
+                <td>'/clients/:clientsId/removeFavourite'</td>
+                <td>None</td>
+                <td>Returns a text confirming which movie was removed</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>Allow clients to terminate account</td>
+                <td>'/clients'</td>
+                <td>None</td>
+                <td>Returns a text confirming account termination</td>
+            </tr>
+        </tbody>
+    </table>
+<script src="/index.js"></script>
 </body>
 
 </html>
