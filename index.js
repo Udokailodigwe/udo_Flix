@@ -1,10 +1,16 @@
 //Require necessary modules for server creation.
+const mongoose = require('mongoose'); 
+const models = require('./models.js'); //module for mongoDB schema
 const express = require ('express');
 const morgan = require ('morgan');
+const movies = models.movies;
+const users = models.users;
 bodyParser = require ('body-parser');
 uuid = require ('uuid');
 
 app = express(); //Encapsulated the express function with variable, app.
+
+mongoose.connect('mongodb://localhost:27017/dbname', { useNewUrlParser: true, useUnifiedTopology: true }); //linking mongodb database
 
 //Created JSON object to carry movie data.
 let myMovies = [
