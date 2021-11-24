@@ -10,7 +10,7 @@ uuid = require ('uuid');
 
 app = express(); //Encapsulated the express function with variable, app.
 
-mongoose.connect('mongodb://localhost:27017/dbname', { useNewUrlParser: true, useUnifiedTopology: true }); //linking mongodb database
+mongoose.connect('mongodb://localhost:27017/udo_flixdb', { useNewUrlParser: true, useUnifiedTopology: true }); //linking mongodb database
 
 //Created JSON object to carry movie data.
 let myMovies = [
