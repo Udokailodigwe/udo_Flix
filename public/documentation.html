@@ -50,7 +50,7 @@
             </tr>
             <tr>
                 <td>GET</td>
-                <td>Get data about a movie director</td>
+                <td>Get movie director name</td>
                 <td>'/movies/director/:name'</td>
                 <td>None</td>
                 <td>Get an array of a movie director data in JSON format, based on the director entered in the URL parameter </td>
@@ -58,41 +58,40 @@
             <tr>
                 <td>POST</td>
                 <td>Allow clients to create account</td>
-                <td>'/clients'</td>
-                <td>Clients' user information added to the server in a form  style</td>
-                <td>A text message of the client's added information, included with a unique id and an extra successproof message  </td>
+                <td>'/users'</td>
+                <td>Clients' user information added to the server in a JSON format  style</td>
+                <td>A JSON format of the client's added information, included with a unique id and an extra successproof message  </td>
             </tr>
             <tr>
                 <td>PUT</td>
                 <td>Allow clients to update their client info</td>
-                <td>'/clients/:clientsId/clientsInfo'</td>
+                <td>'/users/:username'</td>
                 <td>None</td>
-                <td>A text is returned alongside the updated data</td>
+                <td>A JSON format data with the updated result</td>
             </tr>
             <tr>
                 <td>POST</td>
                 <td>Allow clients to add their favourite movies to their library</td>
-                <td>'/clients/:clientsId/addFavourite'</td>
-                <td>An array of JSON data containing the added movie. Example: { title: 'Lupin', director: ['Louis Leterrier', 'Marcela Said'], genre: ['Crime', 'Thriller', 'Mystery', 'Drama'], releaseYear: 2021 } </td>
-                <td>An array of the added movie data in JSON format, with a text  confirming added data and an added ID. Example: { <b>id: 79,</b>  title: 'Lupin', director: ['Louis Leterrier', 'Marcela Said'], genre: ['Crime', 'Thriller', 'Mystery', 'Drama'], releaseYear: 2021 } </td>
+                <td>'/users/:username/movies/:movieId'</td>
+                <td>A unique id of the favorite movie will be added to the users list. Example:"/users/'Tony'/movies/:619aab110bb457bf0b0afda4" </td>
+                <td>An array of the users data in JSON format, and an added unique movieid. Example: "username": "Tony", "email": "tony@gmail.com", "favoriteMovie": "619aab110bb457bf0b0afda4" </td>
             </tr>
             <tr>
                 <td>DELETE</td>
                 <td>Allow clients to remove a movie from their list of favorites</td>
-                <td>'/clients/:clientsId/removeFavourite'</td>
+                <td>'/users/:username/movies/:movieId'</td>
                 <td>None</td>
-                <td>Returns a text confirming which movie was removed</td>
+                <td>Returns an empty array of favoriteMovie object or an array with an ommitted movieid that was deleted</td>
             </tr>
             <tr>
                 <td>DELETE</td>
                 <td>Allow clients to terminate account</td>
-                <td>'/clients'</td>
+                <td>'/users'</td>
                 <td>None</td>
                 <td>Returns a text confirming account termination</td>
             </tr>
         </tbody>
     </table>
-<script src="/index.js"></script>
 </body>
 
 </html>
