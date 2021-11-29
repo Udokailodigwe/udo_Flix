@@ -1,11 +1,11 @@
 //Require necessary modules for server creation.
 const express = require ('express');
 const morgan = require ('morgan');
+const mongoose = require('mongoose'); 
 bodyParser = require ('body-parser');
-uuid = require ('uuid');
+
 app = express(); //Encapsulated the express function with variable, app.
 
-const mongoose = require('mongoose'); 
 const models = require('./models.js'); //module for mongoDB schema
 
 const movies = models.movies;
@@ -14,7 +14,7 @@ const users = models.users;
 mongoose.connect(
   'mongodb://localhost:27017/udo_flixdb', {
     useNewUrlParser: true, useUnifiedTopology: true 
-    }); //linking to mongodb database
+    }); //linking my REST API  to mongodb database
 
 //Created middleware functions to ...
 app.use (morgan('common')); //log all request on terminal
@@ -22,7 +22,7 @@ app.use(express.static('public')); // serve all static file in public folder
 app.use(bodyParser.json()); //get json data from http request body inside req handlers using req.body
 app.use(bodyParser.urlencoded({extended:true}));
 
-let auth = require ('./auth')(app); //appending express() into auth module using (app).
+let auth = require ('./auth.js')(app); //appending express() into auth module using (app).
 
 const passport = require ('passport');
 require ('./passport');

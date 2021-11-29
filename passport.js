@@ -3,11 +3,11 @@ LocalStrategy = require('passport-local').Strategy,
 Models = require('./models.js'),
 passportJWT = require('passport-jwt');
 
-let users = Models.user,
+let users = Models.users,
 JWTStrategy = passportJWT.Strategy,
 ExtractJWT = passportJWT.ExtractJwt;
 
-passport.use(new LocalStrategy({
+passport.use(new LocalStrategy({//Create local strategy that authenticates username and password.
    usernameField: 'username',
    passwordField: 'password'
 }, (username, password, callback) =>{
@@ -26,13 +26,13 @@ passport.use(new LocalStrategy({
    });
 }));
 
-passport.use(new JWTStrategy({
+passport.use(new JWTStrategy({// Create JWTStrategy to authenticate user using JSON tokens.
    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
    secretOrKey: 'your_jwt_secret'
 }, (jwtPayload, callback) => {
    return users.findById(jwtPayload._id)
-      .then((user) =>{
-         return callback(null, user);
+      .then((users) =>{
+         return callback(null, users);
       })
       .catch((error) => {
          return callback(error)
