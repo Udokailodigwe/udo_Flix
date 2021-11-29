@@ -22,6 +22,11 @@ app.use(express.static('public')); // serve all static file in public folder
 app.use(bodyParser.json()); //get json data from http request body inside req handlers using req.body
 app.use(bodyParser.urlencoded({extended:true}));
 
+let auth = require ('./auth')(app); //appending express() into auth module using (app).
+
+const passport = require ('passport');
+require ('./passport');
+
 //Get index page request/route
 app.get('/', (req, res) =>{
   res.send('Welcome to the hub of movies !'); //respond to index route
@@ -33,7 +38,7 @@ app.get('/documentation', (req, res) => {
 });
 
 //Get all movies request/route
-app.get('/movies', (req, res) =>{
+app.get('/movies', passport.authenticate ('jwt', {session: false}), (req, res) =>{
   movies.find()
     .then((movies) => {
       res.status(201).json(movies); 
@@ -69,7 +74,7 @@ app.get('/movies/genre/:name', (req, res)=> {
 });
 
 //Get all users 
-app.get('/users', (req, res) =>{
+app.get('/users',  (req, res) =>{
   users.find()
     .then((users)=> {
       res.status(201).json(users);
@@ -105,7 +110,7 @@ app.get('/movies/directors/:name', (req, res) =>{
 });
 
 //Allow new user to create account
-app.post('/users', (req, res)=> {
+app.post('/users',  (req, res)=> {
   users.findOne({username: req.body.username})
     .then((availableOldUser)=> {
       if(availableOldUser) {
@@ -131,8 +136,8 @@ app.post('/users', (req, res)=> {
 });
 
 //Allow users to update info
-app.put('/users/:id', (req, res)=> {
-  users.findOneAndUpdate({id: req.params.id},
+app.put('/users/:username', (req, res)=> {
+  users.findOneAndUpdate({username: req.params.username},
     {$set:
       {
         username: req.body.username,
@@ -187,7 +192,7 @@ users.findOneAndUpdate({username: req.params.username},
 });
 
 //Allow clients to terminate account
-app.delete('/users/:username', (req, res) =>{
+app.delete('/users/:username',  (req, res) =>{
   users.findOneAndRemove({username: req.params.username})
     .then((user)=> {
       if(!user) {
