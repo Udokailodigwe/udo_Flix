@@ -1,13 +1,13 @@
 const passport = require('passport'),
-LocalStrategy = require('passport-local').Strategy,
-Models = require('./models.js'),
-passportJWT = require('passport-jwt');
+   LocalStrategy = require('passport-local').Strategy,
+   Models = require('./models.js'),
+   passportJWT = require('passport-jwt');
 
 let users = Models.users,
-JWTStrategy = passportJWT.Strategy,
-ExtractJWT = passportJWT.ExtractJwt;
+   JWTStrategy = passportJWT.Strategy,
+   ExtractJWT = passportJWT.ExtractJwt;
 
-passport.use(new LocalStrategy({//Create local strategy that authenticates username and password.
+passport.use(new LocalStrategy({ //Create local strategy that authenticates username and password.
    usernameField: 'username',
    passwordField: 'password'
 }, (username, password, callback) =>{
