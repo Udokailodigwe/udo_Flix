@@ -1,7 +1,8 @@
 //Require necessary modules for server creation.
 const express = require ('express');
 const morgan = require ('morgan');
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
+const cors =require('cors'); 
 bodyParser = require ('body-parser');
 
 app = express(); //Encapsulated the express function with variable, app.
@@ -21,6 +22,17 @@ app.use (morgan('common')); //log all request on terminal
 app.use(express.static('public')); // serve all static file in public folder
 app.use(bodyParser.json()); //get json data from http request body inside req handlers using req.body
 app.use(bodyParser.urlencoded({extended:true}));
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+app.use(cors({
+  origin: (origin, callback) =>{
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1){// If a specific origin isn’t found on the list of allowed origins
+      let message = 'The CORS policy for this application doesn’t allow access from origin '  + origin;
+      return callback(new Error(message ), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 let auth = require ('./auth.js')(app); //appending express() into auth module using (app).
 
@@ -111,14 +123,15 @@ app.get('/movies/directors/:name', passport.authenticate ('jwt', {session: false
 
 //Allow new user to create account
 app.post('/users',  (req, res)=> {
-  users.findOne({username: req.body.username})
+  let hashedPassword = users.hashedPassword(req.body.password);
+  users.findOne({username: req.body.username}) //search if user already exist
     .then((availableOldUser)=> {
       if(availableOldUser) {
         return res.status(400).send(req.body.username + ' ' + 'has an existing registered account');
       }else {
         users.create({
           username: req.body.username,
-          password: req.body.password,
+          password: hashedPassword,
           email: req.body.email,
           birthday: req.body.birthday
         })
