@@ -8,6 +8,7 @@ bodyParser = require ('body-parser');
 app = express(); //Encapsulated the express function with variable, app.
 
 const models = require('./models.js'); //module for mongoDB schema
+const {check, validationResult} = require ('express-validator');
 
 const movies = models.movies;
 const users = models.users;
@@ -122,8 +123,19 @@ app.get('/movies/directors/:name', passport.authenticate ('jwt', {session: false
 });
 
 //Allow new user to create account
-app.post('/users',  (req, res)=> {
-  let hashedPassword = users.hashedPassword(req.body.password);
+app.post('/users', 
+  [ //employ express validator for checks
+    check('username', 'Username is required.').isLength({min: 5}),
+    check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('password', 'Password is required.').not().isEmpty(),
+    check('email', 'Email does not appear to be valid.').isEmail(),
+    check('birthday', 'Birthday format is invalid.' ).isDate()
+  ], (req, res)=> {
+  let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({errors: errors.array()} );
+    }
+  let hashedPassword = users.hashPassword(req.body.password);
   users.findOne({username: req.body.username}) //search if user already exist
     .then((availableOldUser)=> {
       if(availableOldUser) {
@@ -149,7 +161,18 @@ app.post('/users',  (req, res)=> {
 });
 
 //Allow users to update info
-app.put('/users/:username', passport.authenticate ('jwt', {session: false}), (req, res)=> {
+app.put('/users/:username', passport.authenticate ('jwt', {session: false}),
+  [
+    check(' username', 'Username is required.').isLength({min: 5}),
+    check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('password', 'Password is required.').not().isEmpty(),
+    check('email', 'Email does not appear to be valid.').isEmail(),
+    check('birthday', 'Birthday format is invalid.' ).isDate()
+  ], (req, res)=> {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({errors: errors.array() });
+    }
   users.findOneAndUpdate({username: req.params.username},
     {$set:
       {
@@ -228,6 +251,7 @@ app.use((err, req, res, next) => {
 });
 
 //Listens to requests on port.
-app.listen(8080, () =>{
-  console.log('This app is listening on port 8080.');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () =>{
+  console.log('Listening on port ' + port);
 });
