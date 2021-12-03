@@ -1,9 +1,12 @@
+const dotenv = require('dotenv');
+dotenv.config();
 //Require necessary modules for server creation.
 const express = require ('express');
 const morgan = require ('morgan');
 const mongoose = require('mongoose');
-const cors =require('cors'); 
 bodyParser = require ('body-parser');
+// const cors =require('cors'); //disabled cross origin resource sharing security technique
+// app.use(cors());
 
 app = express(); //Encapsulated the express function with variable, app.
 
@@ -13,10 +16,9 @@ const {check, validationResult} = require ('express-validator');
 const movies = models.movies;
 const users = models.users;
 
-mongoose.connect(
-  process.env.CONNECTION_URI,{ useNewUrlParser: true, useUnifiedTopology: true }
-);
+mongoose.connect(process.env.CONNECTION_URI,{ useNewUrlParser: true,useUnifiedTopology: true});
 
+//Commented out for switching to local server...
 // mongoose.connect(
 //   'mongodb://localhost:27017/udo_flixdb', {
 //     useNewUrlParser: true, useUnifiedTopology: true 
@@ -27,23 +29,13 @@ app.use (morgan('common')); //log all request on terminal
 app.use(express.static('public')); // serve all static file in public folder
 app.use(bodyParser.json()); //get json data from http request body inside req handlers using req.body
 app.use(bodyParser.urlencoded({extended:true}));
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
-app.use(cors({
-  origin: (origin, callback) =>{
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1){// If a specific origin isn’t found on the list of allowed origins
-      let message = 'The CORS policy for this application doesn’t allow access from origin '  + origin;
-      return callback(new Error(message ), false);
-    }
-    return callback(null, true);
-  }
-}));
 
 let auth = require ('./auth.js')(app); //appending express() into auth module using (app).
 
 const passport = require ('passport');
 require ('./passport');
 
+//...................CRUD operations.........................
 //Get index page request/route
 app.get('/', (req, res) =>{
   res.send('Welcome to the hub of movies !'); //respond to index route
