@@ -5,10 +5,11 @@ const express = require ('express');
 const morgan = require ('morgan');
 const mongoose = require('mongoose');
 bodyParser = require ('body-parser');
-// const cors =require('cors'); //disabled cross origin resource sharing security technique
-// app.use(cors());
+
+const cors =require('cors'); 
 
 app = express(); //Encapsulated the express function with variable, app.
+app.use(cors());
 
 const models = require('./models.js'); //module for mongoDB schema
 const {check, validationResult} = require ('express-validator');
