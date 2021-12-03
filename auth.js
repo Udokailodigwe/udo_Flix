@@ -8,8 +8,7 @@ const jwt = require('jsonwebtoken'),
       return jwt.sign(users, jwtSecret, {
          subject: users.username, //Encoding username in JWT
          expiresIn: '7d', // Specifying the number of days the token will expire
-         algorithm: 'HS256' // Algorithm used to 'sign' or encode the values of the JWT
-      });
+         });
    }
 
    /* POST login. */
