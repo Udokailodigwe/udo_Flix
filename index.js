@@ -14,9 +14,13 @@ const movies = models.movies;
 const users = models.users;
 
 mongoose.connect(
-  'mongodb://localhost:27017/udo_flixdb', {
-    useNewUrlParser: true, useUnifiedTopology: true 
-    }); //linking my REST API  to mongodb database
+  process.env.CONNECTION_URI,{ useNewUrlParser: true, useUnifiedTopology: true }
+);
+
+// mongoose.connect(
+//   'mongodb://localhost:27017/udo_flixdb', {
+//     useNewUrlParser: true, useUnifiedTopology: true 
+//     }); //linking my REST API  to mongodb database
 
 //Created middleware functions to ...
 app.use (morgan('common')); //log all request on terminal
