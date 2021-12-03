@@ -15,3 +15,10 @@ td, th {
 tr:nth-child(even) {
 background-color: #b8e9ee;
 }
+
+h1, .app__description{
+   text-align: center;
+}
+.app__description{
+   font-size: large;
+}

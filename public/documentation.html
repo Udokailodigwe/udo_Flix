@@ -5,11 +5,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/public/styles.css">
     <title>udo_flix API</title>
 </head>
 
 <body>
+<h1> udo_flix REST API Documentation</h1>
+<p class="app__description">
+    The documentation on the functionality and understanding of how this API works is detailed below. 
+</p>
+<h3> <i>udo_flix REST API goal:</i> </h3>
+<p>
+    The goal of this REST API is to provide users informational access to movies of their choice. Movie requests and selections can be conducted via both movie genres and movie directors.
+</p>
+<br>
 <table>
     <thead>
         <tr>
@@ -59,8 +68,24 @@
                 <td>POST</td>
                 <td>Allow clients to create account</td>
                 <td>'/users'</td>
-                <td>Clients' user information added to the server in a JSON format  style</td>
-                <td>A JSON format of the client's added information, included with a unique id and an extra successproof message  </td>
+                <td>A JSON object holding data about the new user
+                <br>
+                Example: {
+                Username: 'Grace1',
+                Password: '0000',
+                Email: 'grace@gmail.com',
+                Birthday: "2000-01-01"
+                }</td>
+                <td>A JSON format of the client's added information, included with a unique id and an extra successproof message 
+                    <br>
+                Example: {
+                id: 313abc8798298eetwewe222445,
+                username: 'Grace1',
+                password: '0000',
+                emailAddress: 'grace@gmail.com'
+                Birthday: "2000-01-01"
+                }
+                </td>
             </tr>
             <tr>
                 <td>PUT</td>
@@ -73,7 +98,7 @@
                 <td>POST</td>
                 <td>Allow clients to add their favourite movies to their library</td>
                 <td>'/users/:username/movies/:movieId'</td>
-                <td>A unique id of the favorite movie will be added to the users list. Example:"/users/'Tony'/movies/:619aab110bb457bf0b0afda4" </td>
+                <td>A unique id of the favorite movie will be added to the users list. Example:"/users/'Tony'/movies/619aab110bb457bf0b0afda4 </td>
                 <td>An array of the users data in JSON format, and an added unique movieid. Example: "username": "Tony", "email": "tony@gmail.com", "favoriteMovie": "619aab110bb457bf0b0afda4" </td>
             </tr>
             <tr>
