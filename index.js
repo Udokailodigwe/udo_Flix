@@ -3,6 +3,7 @@ const express = require ('express');
 const morgan = require ('morgan');
 const mongoose = require('mongoose');
 bodyParser = require ('body-parser');
+require ('dotenv').config();
 
 const cors =require('cors'); 
 
@@ -14,6 +15,8 @@ const {check, validationResult} = require ('express-validator');
 
 const movies = models.movies;
 const users = models.users;
+
+
 
 mongoose.connect(process.env.CONNECTION_URI,{ useNewUrlParser: true,useUnifiedTopology: true});
 
