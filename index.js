@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 bodyParser = require ('body-parser');
 require ('dotenv').config();
 
-const cors =require('cors'); 
+
 
 app = express(); //Encapsulated the express function with variable, app.
 
