@@ -8,7 +8,6 @@ require ('dotenv').config();
 const cors =require('cors'); 
 
 app = express(); //Encapsulated the express function with variable, app.
-app.use(cors());
 
 const models = require('./models.js'); //module for mongoDB schema
 const {check, validationResult} = require ('express-validator');
