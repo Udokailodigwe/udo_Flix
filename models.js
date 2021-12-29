@@ -14,7 +14,7 @@ let moviesSchema = mongoose.Schema({
    },
    actors:[String],
    imagepath: String,
-   releasedyear: Number
+   releasedyear: String
 });
 
 let usersSchema = mongoose.Schema({
