@@ -5,22 +5,23 @@ const mongoose = require('mongoose');
 bodyParser = require('body-parser');
 require('dotenv').config();
 
-const cors = require('cors');
-let allowedOrigins = ['http://localhost:8080',
-'http://localhost:1234', 'http://udoflix.netlify.app'];
+// const cors = require('cors');
+// let allowedOrigins = ['http://localhost:8080',
+// 'http://localhost:1234', 'http://udoflix.netlify.app'];
 
-app.use(cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin)=== -1){//if a specific origin isnt found in the list of allowed origins
-        let message = "The CORS policy for this application doesn't allow access from origin" + origin;
-        return callback (new Error(message), false);
-      }
-      return callback(null, true);
-    }
-}));
+// app.use(cors({
+//     origin: (origin, callback) => {
+//       if (!origin) return callback(null, true);
+//       if (allowedOrigins.indexOf(origin)=== -1){//if a specific origin isnt found in the list of allowed origins
+//         let message = "The CORS policy for this application doesn't allow access from origin" + origin;
+//         return callback (new Error(message), false);
+//       }
+//       return callback(null, true);
+//     }
+// }));
 
 app = express(); //Encapsulated the express function with variable, app.
+
 app.use(cors());
 
 const models = require('./models.js'); //module for mongoDB schema
