@@ -173,19 +173,10 @@ app.post('/users',
 
 //Allow users to update info
 app.put('/users/:username', passport.authenticate('jwt', { session: false }),
-  [
-    check(' username', 'Username is required.').isLength({ min: 5 }),
-    check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-    check('password', 'Password is required.').not().isEmpty(),
-    check('email', 'Email does not appear to be valid.').isEmail(),
-    ], (req, res) => {
-    let errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
+(req, res) => {
+    let hashedPassword = user.hashPassword(req.body.password);
     users.findOneAndUpdate({ username: req.params.username },
-      {
-        $set:
+      {$set:
         {
           username: req.body.username,
           password: req.body.password,
@@ -193,7 +184,7 @@ app.put('/users/:username', passport.authenticate('jwt', { session: false }),
           birthday: req.body.birthday
         }
       },
-      { new: true }, //Ensures document is returned
+      { new: true }, //Ensures new document is returned after change is made successfully
       (err, userUpdated) => {
         if (err) {
           console.error(err);
