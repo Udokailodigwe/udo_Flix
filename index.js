@@ -174,7 +174,7 @@ app.post('/users',
 //Allow users to update info
 app.put('/users/:username', passport.authenticate('jwt', { session: false }),
 (req, res) => {
-    let hashedPassword = user.hashPassword(req.body.password);
+    let hashedPassword = users.hashPassword(req.body.password);
     users.findOneAndUpdate({ username: req.params.username },
       {$set:
         {
