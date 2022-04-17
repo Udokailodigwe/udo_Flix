@@ -111,8 +111,8 @@ app.get('/movies/genre/:name', passport.authenticate('jwt', { session: false }),
 // });
 
 //Get user by username
-app.get('/users/:userId', passport.authenticate('jwt', { session: false }), (req, res) => {
-  users.findOne({ _id: req.params.userId })
+app.get('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
+  users.findOne({ username: req.params.username })
     .then((users) => {
       res.status(201).json(users);
     })
