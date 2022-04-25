@@ -21,11 +21,11 @@ const cors = require('cors');
 //     }
 // }));
 
-app = express(); //Encapsulated the express function with variable, app.
+app = express();        //Encapsulated the express function with variable, app.
 
 app.use(cors());
 
-const models = require('./models.js'); //module for mongoDB schema
+const models = require('./models.js');          //module for mongoDB schema
 const { check, validationResult } = require('express-validator');
 
 const movies = models.movies;
@@ -35,35 +35,52 @@ const users = models.users;
 
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-//Commented out for switching to local server...
+// for switching to local server...
 // mongoose.connect(
 //   'mongodb://localhost:27017/udo_flixdb', {
 //     useNewUrlParser: true, useUnifiedTopology: true 
 //     }); //linking my REST API  to mongodb database
 
+
 //Created middleware functions to ...
-app.use(morgan('common')); //log all request on terminal
-app.use(express.static('public')); // serve all static file in public folder
-app.use(bodyParser.json()); //get json data from http request body inside req handlers using req.body
+app.use(morgan('common'));         //log all request on terminal
+app.use(express.static('public'));   // serve all static file in public folder
+app.use(bodyParser.json());          //get json data from http request body inside req handlers using req.body
 app.use(bodyParser.urlencoded({ extended: true }));
 
-let auth = require('./auth.js')(app); //appending express() into auth module using (app).
+let auth = require('./auth.js')(app);       //appending express() into auth module using (app).
 
+/** Passport is used for authorization */
 const passport = require('passport');
 require('./passport');
 
-//...................CRUD operations.........................
-//Get index page request/route
+//.......................................................CRUD Methods.................................
+
+/**
+ * GET index page request 
+ * @method GET
+ * @param {URL} endpoint - endpoint to route to home "/"
+ */
 app.get('/', (req, res) => {
-  res.send('Welcome to the hub of movies !'); //respond to index route
+  res.send('Welcome to the hub of movies !'); 
 });
 
-//Get documentation request/route
+/**
+ * GET documentation page request 
+ * @method GET
+ * @param {URL} endpoint - endpoint to fetch documentation "/documentation"
+ * @returns {public-file} - returns '/public/documentation.html', { root: __dirname }
+ */
 app.get('/documentation', (req, res) => {
-  res.sendFile('public/documentation.html', { root: __dirname }); //respond through express.static
+  res.sendFile('public/documentation.html', { root: __dirname }); 
 });
 
-//Get all movies request/route
+/**
+ * GET Return list of all movies
+ * @method GET
+ * @param {URL} endpoint - endpoint to fetch movies "/movies"
+ * @returns {json-object} - returns list of all movies
+ */
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   movies.find()
     .then((movies) => {
@@ -75,7 +92,13 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
     });
 });
 
-//Get single movie by title
+/**
+ * GET Return all data about a single movie, by title
+ * @method GET
+ * @param {URL} endpoint - endpoint to fetch one movie "/movies"
+ * @param {string} title - title to identify the movie "/:title"
+ * @returns {json-object} - returns data about a single movie
+ */
 app.get('/movies/:title', passport.authenticate('jwt', { session: false }), (req, res) => {
   movies.findOne()
     .then((movieTitle) => {
@@ -87,7 +110,14 @@ app.get('/movies/:title', passport.authenticate('jwt', { session: false }), (req
     });
 });
 
-//Get movies by genre
+
+/**
+ * GET Return single genre by name
+ * @method GET
+ * @param {URL} endpoint - endpoint to fetch genres "/genres"
+ * @param {string} name - Name to identify the genre "/:name"
+ * @returns {json-object} - returns data about a single genre
+ */
 app.get('/movies/genre/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
   movies.find({ 'genre.name': req.params.name })
     .then((genreName) => {
@@ -99,7 +129,12 @@ app.get('/movies/genre/:name', passport.authenticate('jwt', { session: false }),
     });
 });
 
- //Get all users 
+/**
+ * GET Return all users
+ * @method GET
+ * @param {URL} endpoint - endpoint to fetch all users "/users"
+ * @returns {json-object} - returns list of all users
+ */
 app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
   users.find()
     .then((users) => {
@@ -111,7 +146,13 @@ app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) =
     });
 });
 
-//Get user by username
+/**
+ * GET Return single user by username
+ * @method GET
+ * @param {URL} endpoint - endpoint to fetch the users "/users"
+ * @param {string} username - Name of the user to get their data "/:username"
+ * @returns {json-object} - returns data about the user
+ */
 app.get('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
   users.findOne({ username: req.params.username })
     .then((users) => {
@@ -123,7 +164,13 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), (r
     });
 });
 
-//Get movies by directors name
+/**
+ * GET Return single director by name
+ * @method GET
+ * @param {URL} endpoint - endpoint to fetch directors "/directors"
+ * @param {string} name - Name to identify one director "/:name"
+ * @returns {json-object} - returns data about a single director
+ */
 app.get('/movies/directors/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
   movies.find({ 'director.name': req.params.name })
     .then((directors) => {
@@ -135,7 +182,13 @@ app.get('/movies/directors/:name', passport.authenticate('jwt', { session: false
     });
 });
 
-//Allow new user to create account
+/**
+ * POST Allow new users to register
+ * @method POST
+ * @param {URL} endpoint - endpoint to post users "/users"
+ * @returns {string} - returns success / error message
+ * @returns {json-object} - IF successfull: returns object holding the new data
+ */
 app.post('/users',
   [ //employ express validator for checks
     check('username', 'Username is required.').isLength({ min: 5 }),
@@ -172,7 +225,14 @@ app.post('/users',
       });
   });
 
-//Allow users to update info
+  /**
+ * PUT Allow users to update their user info
+ * @method PUT
+ * @param {URL} endpoint - endpoint to put users "/users"
+ * @param {string} username - Name to identify the user whose data needs to be updated
+ * @returns {string} - returns success / error message
+ * @returns {json-object} - IF successfull: returns object holding the updated data
+ */
 app.put('/users/:username', passport.authenticate('jwt', { session: false }),
 (req, res) => {
     let hashedPassword = users.hashPassword(req.body.password);
@@ -196,6 +256,16 @@ app.put('/users/:username', passport.authenticate('jwt', { session: false }),
       });
   });
 
+  /**
+ * POST Allow users to add a movie as favorite
+ * @method POST
+ * @param {URL} endpoint - endpoint to fetch users "/users"
+ * @param {string} username - endpoint to identify the user "/:username"
+ * @param {URL} endpoint - endpoint to fetch all movies "/movies"
+ * @param {string} MovieId - endpoint to post movie as favorite "/:MovieId"
+ * @returns {string} - returns success / error message
+ * @returns {json-object} - IF successfull: returns object holding the updated data
+ */
 //Allow users to add favourite movies
 app.post('/users/:username/movies/:Moviesid', passport.authenticate('jwt', { session: false }), (req, res) => {
   users.findOneAndUpdate({ username: req.params.username },
@@ -215,8 +285,17 @@ app.post('/users/:username/movies/:Moviesid', passport.authenticate('jwt', { ses
     });
 });
 
-//Allow users to remove favourite movies
-app.delete('/users/:username/movies/:Moviesid', passport.authenticate('jwt', { session: false }), (req, res) => {
+/**
+ * DELETE Allow users to remove a movie from their favorites
+ * @method DELETE
+ * @param {URL} endpoint - endpoint to fetch users "/users"
+ * @param {string} username - endpoint to identify the user "/:username"
+ * @param {URL} endpoint - endpoint to fetch all movies "/movies"
+ * @param {string} MovieId - endpoint to remove movie as favorite "/:MovieId"
+ * @returns {string} - returns success / error message
+ * @returns {json-object} - IF successfull: returns object holding the updated data
+ */
+app.delete('/users/:username/movies/:MoviesId', passport.authenticate('jwt', { session: false }), (req, res) => {
   users.findOneAndUpdate({ username: req.params.username },
     {
       $pull: {
@@ -234,7 +313,13 @@ app.delete('/users/:username/movies/:Moviesid', passport.authenticate('jwt', { s
     });
 });
 
-//Allow clients to terminate account
+/**
+ * DELETE Allow existing users to deregister
+ * @method DELETE
+ * @param {URL} endpoint - endpoint to delete users "/users"
+ * @param {string} username - Name to identify the user whose data needs to be deleted
+ * @returns {string} - returns success / error message
+ */
 app.delete('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
   users.findOneAndRemove({ username: req.params.username })
     .then((user) => {
@@ -249,6 +334,7 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
       res.status(500).send('Error: ' + err);
     });
 });
+//...............................................End of CRUD methods...................................
 
 //Created error handler
 app.use((err, req, res, next) => {
