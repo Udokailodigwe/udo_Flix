@@ -308,11 +308,7 @@ app.delete('/users/:username/movies/:MoviesId', passport.authenticate('jwt', { s
         console.error(err);
         res.status(500).send('Error: ' + err);
       } else {
-        users.find({
-          username: req.params.username,
-        }).then((user) => {
-          res.status(200).json(user[0].removeFavorite);
-        });
+        res.json(removeFavorite);
       }
     });
 });
